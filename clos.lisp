@@ -1,7 +1,11 @@
-;; 1. dynamic typed language
-;; 2. multiple dispatch & multiple inheritance
-;; 3. introspection
+;; ---------------------------------------
+;; Data Abstraction
+;; ---------------------------------------
 
+(defclass person ()
+  ())
+
+;; class recreation
 (defclass person ()
   ((name
     :initarg :name
@@ -12,13 +16,15 @@
 
 (defvar pl (make-instance 'person :name "me"))
 
+;; accessor
 (name pl)
 (lisper pl)
 
 (setf (lisper pl) t)
 
-(defclass child (person)
-  ())
+;; ---------------------------------------
+;; Inheritance
+;; ---------------------------------------
 
 (defclass child (person)
   ((can-walk-p
@@ -29,25 +35,21 @@
 
 (can-walk-p (make-instance 'child))
 
-(defun make-person (name &key lisper)
-  (make-instance 'person :name name :lisper lisper))
+;; multiple inheritance
+(defclass baby (child person)
+  ())
 
-;; info
+;; ---------------------------------------
+;; Dynamically typed
+;; ---------------------------------------
 
 (find-class 'person)
 (class-name (find-class 'person))
 (class-of pl)
 
-;; multiple inheritance
-(defclass baby (child person)
-  ())
-
-;; generic functions
-(defmethod greet (obj)
-  (format t "Are you a person ? You are a ~a.~&" (type-of obj)))
-
-(greet pl)
-
+;; ---------------------------------------
+;; Opertaion Abstraction
+;; ---------------------------------------
 (defgeneric greet (obj)
   (:documentation "say hello"))
 
@@ -63,7 +65,43 @@
 (greet pl)
 (greet cl)
   
+;; multiple dispatching
+(defgeneric hug (a b)
+   (:documentation "Hug between two persons."))
+
+(defmethod hug ((a person) (b person))
+  :person-person-hug)
+
+(defmethod hug ((a child) (b child))
+  :person-child-hug)
+
+(hug pl pl)
+(hug cl cl)
+
+;; principles
+;; 1. compute the list of applicable methods
+;; 2. if no method is applicable then signal an error
+;; 3. sort the applicable methods in order of specificity
+;; 4. invoke the most specific method.
+
 ;; specializers
+(defgeneric feed (obj meal-type)
+  (:method (obj meal-type)
+    (declare (ignorable meal-type))
+    (format t "eating~&")))
 
+(defmethod feed (obj (meal-type (eql :dessert)))
+    (declare (ignorable meal-type))
+    (format t "mmh, dessert !~&"))
 
+(feed cl :dessert)
+;; mmh, dessert !
 
+(defmethod feed ((obj child) (meal-type (eql :soup)))
+    (declare (ignorable meal-type))
+    (format t "bwark~&"))
+
+(feed pl :soup)
+;; eating
+(feed cl :soup)
+;; bwark
