@@ -1,4 +1,4 @@
-# What Is Object-Oriented Programming?
+# What is Object-Oriented Programming?
 
 ## Benjamin C. Pierce's Answer
 
