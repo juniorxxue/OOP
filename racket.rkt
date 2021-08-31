@@ -38,3 +38,19 @@
 
 (define person-ready% (ready-mixin person%))
 (send (new person-ready% (name "XU") (lisper #t)) greet)
+
+;; --------------------------------
+;; Interface
+;; --------------------------------
+
+(define hug-interface
+  (interface () hug))
+
+
+(define kid%
+  (class* person% (hug-interface)
+    (super-new)
+    (define/public (hug)
+      "hugging")))
+
+(send (new kid% (name "XU") (lisper #t)) hug)
