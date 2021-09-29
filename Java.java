@@ -18,9 +18,21 @@ public class Main {
   }
 }
 
-// $ java com.gigamonkeys.Main A
+// $ java .Main A
 // A/A
 
 
-// $ java com.gigamonkeys.Main B
+// $ java .Main B
 // B/A
+
+
+// in λi,
+// f(A)
+// f(A&B)
+// A a1 = ....;
+// B b1 = ....;
+
+// A a2 = a1 ,, b1
+// f(a2)
+// actually call f(A)
+// (λ(a2: A). e) a1 ,, b1
